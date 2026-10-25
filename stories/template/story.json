@@ -3,7 +3,7 @@
   "id": "jihoon-secret-love",
   "title": "藏在手机里的喜欢",
   "description": "虚构同人互动故事：韩志薰与金道勋正在秘密热恋，队内成员尚不知情，只觉得两人关系好得有些奇怪。人物对话均为创作。",
-  "revision": 5,
+  "revision": 6,
   "phone": {
     "owner": "韩志薰",
     "date": "2026-10-25",
@@ -734,19 +734,6 @@
         }
       },
       {
-        "id": "wvs-like",
-        "title": "评论",
-        "sender": "互动通知",
-        "body": "有人赞了韩志薰的回复。",
-        "avatar": "",
-        "hidden": true,
-        "meta": {
-          "role": "reply",
-          "artist": "false",
-          "likes": ""
-        }
-      },
-      {
         "id": "wvs-dohun",
         "title": "评论",
         "sender": "金道勋",
@@ -851,11 +838,6 @@
         },
         {
           "type": "unlock",
-          "key": "wvs-like",
-          "value": ""
-        },
-        {
-          "type": "unlock",
           "key": "wvs-dohun",
           "value": ""
         },
@@ -883,11 +865,6 @@
           "type": "unlock",
           "key": "wvs-cp-2",
           "value": ""
-        },
-        {
-          "type": "notification",
-          "key": "",
-          "value": "Weverse：韩志薰回复了「昏昏今天在干嘛」"
         }
       ]
     },
@@ -1027,10 +1004,6 @@
         },
         {
           "event": "read",
-          "target": "wvs-like"
-        },
-        {
-          "event": "read",
           "target": "wvs-dohun"
         },
         {
@@ -1079,10 +1052,6 @@
         {
           "event": "read",
           "target": "wvs-jihoon"
-        },
-        {
-          "event": "read",
-          "target": "wvs-like"
         },
         {
           "event": "read",
