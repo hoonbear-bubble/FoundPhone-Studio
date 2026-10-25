@@ -1,3 +1,4 @@
+import { WeverseCommentNotice } from "./WeverseCommentNotice";
 import { StatusGlyph } from "./ios/StatusGlyph";
 import { SocialDetail, socialDetailApps } from "./skins/SocialDetails";
 import { NativeCalculator } from "./ios/Calculator";
@@ -296,7 +297,13 @@ function PhoneRuntime({
     const count = s.notifications.length;
     if (!locked && work.phone.notifications && count > noticesSeen.current) {
       setBanner(s.notifications.at(-1) || "");
-      const timer = setTimeout(() => setBanner(""), 4500);
+      const notice = s.notifications.at(-1) || "";
+      const timer = setTimeout(
+        () => setBanner(""),
+        notificationContent(notice, work.apps).appId === "weverse"
+          ? 8000
+          : 4500,
+      );
       noticesSeen.current = count;
       return () => clearTimeout(timer);
     }
@@ -509,7 +516,7 @@ function PhoneRuntime({
                     name={small ? undefined : a.name}
                     small={small}
                     custom={a.icon}
-                    date={s.date || work.phone.date}
+                    date={s.date || work.phone.date || ""}
                     time={s.time}
                   />
                 )}
@@ -689,20 +696,44 @@ function PhoneRuntime({
           )}
           {banner && !locked && (
             <button
-              className="device-banner"
+              className={
+                "device-banner" +
+                (notificationContent(banner, work.apps).appId === "weverse"
+                  ? " wvs-comment-banner"
+                  : "")
+              }
               onClick={() => {
                 setBanner("");
-                setPanel("notification");
+                if (notificationContent(banner, work.apps).appId === "weverse")
+                  open("weverse");
+                else setPanel("notification");
               }}
             >
-              <AppIcon
-                id={notificationContent(banner, work.apps).appId}
-                small
-              />
-              <span>
-                <strong>{notificationContent(banner, work.apps).title}</strong>
-                <span>{notificationContent(banner, work.apps).body}</span>
-              </span>
+              {notificationContent(banner, work.apps).appId === "weverse" &&
+              work.data.weverse?.find((i) => i.id === "wvs-jihoon") &&
+              work.data.weverse?.find((i) => i.id === "wvs-question") ? (
+                <WeverseCommentNotice
+                  comment={work.data.weverse.find(
+                    (i) => i.id === "wvs-jihoon",
+                  )!}
+                  post={work.data.weverse.find((i) => i.id === "wvs-question")!}
+                  date={s.date || work.phone.date || ""}
+                  time={displayTime}
+                />
+              ) : (
+                <>
+                  <AppIcon
+                    id={notificationContent(banner, work.apps).appId}
+                    small
+                  />
+                  <span>
+                    <strong>
+                      {notificationContent(banner, work.apps).title}
+                    </strong>
+                    <span>{notificationContent(banner, work.apps).body}</span>
+                  </span>
+                </>
+              )}
             </button>
           )}
           {panel === "switcher" && (

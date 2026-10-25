@@ -3,7 +3,7 @@
   "id": "jihoon-secret-love",
   "title": "藏在手机里的喜欢",
   "description": "虚构同人互动故事：韩志薰与金道勋正在秘密热恋，队内成员尚不知情，只觉得两人关系好得有些奇怪。人物对话均为创作。",
-  "revision": 7,
+  "revision": 8,
   "phone": {
     "owner": "韩志薰",
     "date": "2026-10-25",
@@ -552,7 +552,7 @@
       {
         "id": "wvs-question",
         "title": "粉丝社区",
-        "sender": "昏昏今天在干嘛",
+        "sender": "。：",
         "body": "志薰和道勋在做什么？",
         "hidden": true,
         "meta": {
@@ -704,6 +704,11 @@
           "type": "unlock",
           "key": "wvs-cp-2",
           "value": ""
+        },
+        {
+          "type": "notification",
+          "key": "",
+          "value": "Weverse：韩志薰在 。： 的帖子下发表了评论：有个哥占着浴室"
         }
       ]
     },

@@ -1324,3 +1324,12 @@
   grid-template-rows: repeat(6, 99px);
   grid-auto-rows: 99px;
 }
+
+.ios18 .device-banner.wvs-comment-banner{background:#fff;border-radius:17px;padding:15px 13px}
+.ios18 .wvs-comment-banner .wvs-comment-notice{display:flex;gap:11px;align-items:flex-start;min-width:0}
+.ios18 .wvs-comment-banner .wvs-notice-avatar{display:flex;width:43px;height:43px;flex:0 0 43px;border-radius:50%;object-fit:cover;background:#edf0f2;align-items:center;justify-content:center}
+.ios18 .wvs-comment-banner .wvs-notice-copy{display:flex;flex-direction:column;min-width:0;gap:8px}
+.ios18 .wvs-comment-banner .wvs-notice-text{display:block;white-space:normal;overflow:visible;font-size:14px;line-height:1.55;overflow-wrap:anywhere}
+.ios18 .wvs-comment-banner .wvs-notice-text b{font-weight:700}
+.ios18 .wvs-comment-banner .wvs-notice-verified{display:inline-block;vertical-align:-2px;color:#13c4bb;margin:0 3px;fill:#c9faf6}
+.ios18 .wvs-comment-banner small{display:block;color:#96999d;font-size:11px;line-height:1.4}
