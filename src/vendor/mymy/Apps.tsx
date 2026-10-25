@@ -1,7 +1,7 @@
 /* React/data adapters for dudwo5/Mymy UI templates: kt/ktn/KHD/bub,
  * igHome/igProfile/igDM/igSheet, xHome. See NOTICE.txt for permission.
  * Author content, DOM globals, timers and media dependencies are excluded. */
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   ArrowLeft,
   Search,
@@ -27,6 +27,7 @@ import {
 } from "lucide-react";
 import type { SkinProps } from "../../AppSkins";
 import { Avatar, Media } from "../../skins/shared";
+import { displayedKakaoItems, clearKakaoThread } from "./kakaoState";
 import { useSkinState } from "../../skinState";
 import { makeItem, type Item } from "../../schema";
 import "./ui.css";
@@ -68,27 +69,22 @@ export function MymyKakao(p: SkinProps) {
     [query, setQuery] = useState(""),
     [menu, setMenu] = useState(false);
   const [tapStep, setTapStep] = useSkinState<number>(p, "bathTapStepV4", 0);
-  const list = grouped(p.items).sort(
-      (a, b) =>
-        Number(b.items.some((i) => i.meta.pinned === "true")) -
-        Number(a.items.some((i) => i.meta.pinned === "true")),
-    ),
-    messages = [
-      ...p.items.filter(
-        (i) =>
-          !i.meta.groupAvatar &&
-          !i.meta.replyChoice &&
-          i.title === p.thread &&
-          (!i.meta.tapSequence || Number(i.meta.tapOrder) <= tapStep),
-      ),
-      ...sent.flatMap((raw, index) => {
+  const [deleted, setDeleted] = useSkinState<string[]>(
+    p,
+    "kktDeletedMessages",
+    [],
+  );
+  const [manage, setManage] = useState(false);
+  const [confirmClear, setConfirmClear] = useState(false);
+  const localMessages = useMemo(
+    () =>
+      sent.flatMap((raw, index) => {
         try {
           const entry: unknown = JSON.parse(raw);
           if (
             !Array.isArray(entry) ||
             entry.length !== 3 ||
-            !entry.every((v) => typeof v === "string") ||
-            entry[0] !== p.thread
+            !entry.every((v) => typeof v === "string")
           )
             return [];
           return [
@@ -106,8 +102,36 @@ export function MymyKakao(p: SkinProps) {
           return [];
         }
       }),
-    ],
-    scroll = useRef<HTMLDivElement>(null);
+    [sent, p.owner],
+  );
+  const allItems = useMemo(
+    () => [...p.items, ...localMessages],
+    [p.items, localMessages],
+  );
+  const revealed = useMemo(
+    () => displayedKakaoItems(allItems, tapStep, deleted),
+    [allItems, tapStep, deleted],
+  );
+  const sourceList = grouped(allItems);
+  const list = sourceList
+    .filter(
+      (g) =>
+        tab === "好友" ||
+        g.items.some((i) => !deleted.includes(i.id) && !i.meta.replyChoice),
+    )
+    .sort(
+      (a, b) =>
+        Number(b.items.some((i) => i.meta.pinned === "true")) -
+        Number(a.items.some((i) => i.meta.pinned === "true")),
+    );
+  const messages = revealed.filter((i) => i.title === p.thread);
+  const isBath = p.items.some(
+    (i) =>
+      i.title === p.thread &&
+      i.meta.tapSequence === "bath" &&
+      !deleted.includes(i.id),
+  );
+  const scroll = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const node = scroll.current;
     if (node) node.scrollTop = node.scrollHeight;
@@ -117,7 +141,14 @@ export function MymyKakao(p: SkinProps) {
       {p.thread ? (
         <>
           <header className="kzth">
-            <Back onClick={() => p.onThread("")} />
+            <Back
+              onClick={() => {
+                setManage(false);
+                setConfirmClear(false);
+                setMenu(false);
+                p.onThread("");
+              }}
+            />
             <span className="kzname">{p.thread}</span>
             <span className="kzpill">
               <button aria-label="聊天菜单" onClick={() => setMenu(!menu)}>
@@ -129,7 +160,7 @@ export function MymyKakao(p: SkinProps) {
             className="msgs kk"
             ref={scroll}
             onClick={() => {
-              if (p.thread === "小屎狗" && tapStep < 7) {
+              if (isBath && tapStep < 7 && !manage) {
                 setTapStep(tapStep + 1);
                 if (tapStep === 6) p.onRead("bath-6");
               }
@@ -163,10 +194,24 @@ export function MymyKakao(p: SkinProps) {
                   )}
                   <button
                     className={"kzbub" + (m.media ? " kzimg" : "")}
-                    onClick={() => m.meta.local !== "true" && read(p, m)}
+                    onClick={() =>
+                      !manage && m.meta.local !== "true" && read(p, m)
+                    }
                   >
                     {m.media ? <Media item={m} /> : m.body}
                   </button>
+                  {manage && (
+                    <button
+                      className="kkt-delete-message"
+                      aria-label={"删除消息：" + m.body}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setDeleted([...deleted, m.id]);
+                      }}
+                    >
+                      删除
+                    </button>
+                  )}
                   {!m.outgoing && run.last && (
                     <span className="kzt">{m.time.slice(-5)}</span>
                   )}
@@ -174,7 +219,7 @@ export function MymyKakao(p: SkinProps) {
               );
             })}
 
-            {p.thread === "小屎狗" && tapStep < 7 && (
+            {isBath && tapStep < 7 && !manage && (
               <p
                 style={{ textAlign: "center", fontSize: 11, color: "#626262" }}
               >
@@ -182,7 +227,12 @@ export function MymyKakao(p: SkinProps) {
               </p>
             )}
             {p.items
-              .filter((i) => i.title === p.thread && i.meta.replyChoice)
+              .filter(
+                (i) =>
+                  !deleted.includes(i.id) &&
+                  i.title === p.thread &&
+                  i.meta.replyChoice,
+              )
               .map((i) => (
                 <button
                   key={i.id}
@@ -195,7 +245,9 @@ export function MymyKakao(p: SkinProps) {
                   {i.body}
                 </button>
               ))}
-            {!messages.length && <Blank />}
+            {!messages.length && !isBath && (
+              <p className="mymy-empty">暂无聊天记录</p>
+            )}
           </div>
           <form
             className="kzinp"
@@ -243,7 +295,38 @@ export function MymyKakao(p: SkinProps) {
               <p>
                 群成员：{[...new Set(messages.map((m) => m.sender))].join("、")}
               </p>
-              <button onClick={() => setMenu(false)}>完成</button>
+              <button
+                onClick={() => {
+                  setManage(!manage);
+                  setMenu(false);
+                  setConfirmClear(false);
+                }}
+              >
+                {manage ? "结束管理" : "管理消息（可逐条删除）"}
+              </button>
+              <button
+                onClick={() => {
+                  if (!confirmClear) {
+                    setConfirmClear(true);
+                    return;
+                  }
+                  setDeleted(clearKakaoThread(allItems, p.thread, deleted));
+                  setManage(false);
+                  setConfirmClear(false);
+                  setMenu(false);
+                  p.onThread("");
+                }}
+              >
+                {confirmClear ? "确认清空这段聊天" : "清空聊天记录"}
+              </button>
+              <button
+                onClick={() => {
+                  setConfirmClear(false);
+                  setMenu(false);
+                }}
+              >
+                完成
+              </button>
             </div>
           )}
         </>
@@ -313,7 +396,11 @@ export function MymyKakao(p: SkinProps) {
             {list
               .filter((g) => g.title.includes(query.trim()))
               .map((g) => {
-                const last = g.items.at(-1)!;
+                const last = revealed.filter((i) => i.title === g.title).at(-1);
+                const peer = g.items.find(
+                  (i) =>
+                    !i.outgoing && !i.meta.groupAvatar && !i.meta.replyChoice,
+                );
                 return (
                   <button
                     className="kzkr kzkcr"
@@ -321,12 +408,12 @@ export function MymyKakao(p: SkinProps) {
                     onClick={() => p.onThread(g.title)}
                   >
                     <Avatar
-                      name={last.sender || g.title}
+                      name={g.title}
                       src={
                         g.items.find((i) => i.meta.groupAvatar === "true")
                           ?.avatar ||
                         g.items.find((i) => !i.outgoing)?.avatar ||
-                        last.avatar
+                        peer?.avatar
                       }
                     />
                     <span className="kzkn">
@@ -336,11 +423,13 @@ export function MymyKakao(p: SkinProps) {
                           ? " 📌"
                           : ""}
                       </b>
-                      <small>{tab === "好友" ? last.sender : last.body}</small>
+                      <small>
+                        {tab === "好友" ? "" : last?.body || "暂无聊天记录"}
+                      </small>
                     </span>
                     <span className="kzkmt">
-                      {last.time.slice(-5)}
-                      {last.meta.unread && (
+                      {last?.time.slice(-5)}
+                      {last?.meta.unread && (
                         <i className="kzkbd">{last.meta.unread}</i>
                       )}
                     </span>

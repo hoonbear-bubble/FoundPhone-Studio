@@ -318,9 +318,17 @@ function PhoneRuntime({
     >
       <KeyboardContext.Provider value={setKeyboard}>
         <div
-          className={`phone-screen wallpaper-${work.phone.wallpaper} ${locked ? "is-locked" : ""} ${app ? "in-app" : ""} ${keyboard ? "keyboard-open" : ""}`}
+          className={`phone-screen wallpaper-${work.phone.wallpaper.startsWith("data:") ? "custom" : work.phone.wallpaper} ${locked ? "is-locked" : ""} ${app ? "in-app" : ""} ${keyboard ? "keyboard-open" : ""}`}
           data-app={app}
-          style={safeMedia(work.phone.wallpaper)?.startsWith("data:image/") ? { backgroundImage: `url("${safeMedia(work.phone.wallpaper)}")`, backgroundSize: "cover", backgroundPosition: "center" } : undefined}
+          style={
+            safeMedia(work.phone.wallpaper)?.startsWith("data:image/")
+              ? {
+                  backgroundImage: `url("${safeMedia(work.phone.wallpaper)}")`,
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
+                }
+              : undefined
+          }
           onDragStart={(e) => e.preventDefault()}
           onPointerDown={(e) => {
             gestureConsumed.current = false;

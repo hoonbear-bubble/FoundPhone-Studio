@@ -628,3 +628,5 @@
   width: 25px;
   height: 25px;
 }
+
+.kkt-delete-message{border:0;background:#fff0f0;color:#b43333;border-radius:8px;padding:5px 9px;font-size:11px;align-self:center;margin:4px}.mymy-kakao .msgs.kk{overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
