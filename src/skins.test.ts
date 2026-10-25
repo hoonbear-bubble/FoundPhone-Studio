@@ -13,7 +13,7 @@ describe("independent app coverage and authored attributes", () => {
       "calculator",
       "settings", "appstore",
     ];
-    expect(Object.keys(catalogSkins)).toHaveLength(44);
+    expect(Object.keys(catalogSkins)).toHaveLength(45);
     for (const app of registry)
       expect(previous.includes(app.id) || app.id in catalogSkins).toBe(true);
   });

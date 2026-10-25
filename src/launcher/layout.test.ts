@@ -13,7 +13,7 @@ const work = () => compileStory(blank).work;
 describe("device layout", () => {
   it("keeps all 47 apps and only defaults installed", () => {
     const l = defaultLayout(work());
-    expect(l.apps).toHaveLength(49);
+    expect(l.apps).toHaveLength(50);
     expect(l.apps.filter((a) => a.installed)).toHaveLength(7);
   });
   it("packs different widget sizes and pages without overlap", () => {

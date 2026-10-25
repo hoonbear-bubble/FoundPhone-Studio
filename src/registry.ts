@@ -178,6 +178,7 @@ const definitions: [
   ],
   ["appstore", "App Store", "system", "#087cff", ShoppingBag, ["搜索"]],
   ["threads", "Threads", "social", "#4d5150", AtSign, ["动态", "回复"]],
+  ["weverse", "Weverse", "social", "#20c9b3", MessageCircle, ["社区"]],
 ];
 export const registry: AppPlugin[] = definitions.map(
   ([id, name, engine, color, icon, tabs]) => ({

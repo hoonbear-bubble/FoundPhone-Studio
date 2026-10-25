@@ -8,7 +8,7 @@ describe("AI story compiler", () => {
     const a = compileStory(copy()),
       b = compileStory(copy());
     expect(a.work).toEqual(b.work);
-    expect(a.work.apps).toHaveLength(49);
+    expect(a.work.apps).toHaveLength(50);
     expect(a.work.apps.filter((a) => a.installed)).toHaveLength(13);
     expect(a.work.data.wechat[0].sender).toBe("小林");
   });

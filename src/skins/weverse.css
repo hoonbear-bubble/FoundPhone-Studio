@@ -1,0 +1,79 @@
+.wvs-story {
+  background: #f6f8f9;
+  color: #25262a;
+}
+.wvs-brand {
+  padding: 18px 20px;
+  font-size: 28px;
+  font-weight: 800;
+  color: #00a998;
+  background: white;
+}
+.wvs-brand small {
+  display: block;
+  font-size: 11px;
+  font-weight: 400;
+  color: #667078;
+  margin-top: 7px;
+}
+.wvs-post {
+  margin: 16px 12px;
+  padding: 20px;
+  background: white;
+  border-radius: 16px;
+}
+.wvs-post p {
+  font-size: 18px;
+  line-height: 1.7;
+}
+.wvs-post small,
+.wvs-reply small {
+  color: #8c939b;
+  font-size: 11px;
+}
+.wvs-reply {
+  display: flex;
+  gap: 10px;
+  padding: 15px 18px;
+  background: white;
+  border-bottom: 1px solid #edf0f2;
+}
+.wvs-reply > div {
+  flex: 1;
+}
+.wvs-reply strong {
+  font-size: 13px;
+}
+.wvs-reply p {
+  margin: 8px 0;
+  line-height: 1.6;
+  white-space: pre-line;
+  font-size: 14px;
+}
+.wvs-reply em {
+  font-size: 9px;
+  font-style: normal;
+  background: #daf9f2;
+  color: #008b75;
+  padding: 3px 5px;
+  border-radius: 5px;
+}
+.wvs-next,
+.kkt-reply-choice {
+  display: block;
+  border: 1px solid #c8d8d4;
+  border-radius: 14px;
+  background: white;
+  padding: 14px;
+  margin: 12px auto;
+  width: 90%;
+  color: #116552;
+  font-size: 14px;
+}
+.wvs-empty {
+  padding: 24px;
+  color: #788088;
+  font-size: 13px;
+  line-height: 1.8;
+  text-align: center;
+}

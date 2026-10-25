@@ -12,6 +12,7 @@ function skin<T>(load: () => Promise<T>, name: keyof T) {
 }
 const mymy = () => import("../vendor/mymy/Apps");
 export const catalogSkins = {
+  weverse: skin(() => import("./WeverseSkin"), "WeverseSkin"),
   kakao: skin(mymy, "MymyKakao"),
   instagram: skin(mymy, "MymyInstagram"),
   phone: skin(system, "PhoneSkin"),

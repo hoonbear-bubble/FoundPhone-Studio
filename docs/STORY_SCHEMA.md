@@ -21,3 +21,5 @@
 媒体仅支持safeMedia允许的内嵌data URL格式。禁止HTML/JS脚本；富文本为安全结构化JSON。作品脚本是公开静态数据，谜题密码不属于安全保密机制。
 
 默认空白模板：stories/blank/story.json。引擎回归样例位于tests/fixtures/story-example，不作为内置作品。自然语言原稿：tests/fixtures/story-example/STORY.md。只改故事数据就能改变手机内容。
+
+自由探索场景的测试可以将 `ending` 留为空字符串，并通过 `expectUnlocked` 检查跨 App 解锁和分支结果，不要求强制结束游玩。实际 ending 节点仍必须有可通过的结局路径。

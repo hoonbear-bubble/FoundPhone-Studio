@@ -68,9 +68,19 @@ export function MymyKakao(p: SkinProps) {
     [query, setQuery] = useState(""),
     [menu, setMenu] = useState(false);
   const [tapStep, setTapStep] = useSkinState<number>(p, "bathTapStepV4", 0);
-  const list = grouped(p.items).sort((a,b) => Number(b.items.some(i => i.meta.pinned === "true")) - Number(a.items.some(i => i.meta.pinned === "true"))),
+  const list = grouped(p.items).sort(
+      (a, b) =>
+        Number(b.items.some((i) => i.meta.pinned === "true")) -
+        Number(a.items.some((i) => i.meta.pinned === "true")),
+    ),
     messages = [
-      ...p.items.filter((i) => i.title === p.thread && (!i.meta.tapSequence || Number(i.meta.tapOrder) <= tapStep)),
+      ...p.items.filter(
+        (i) =>
+          !i.meta.groupAvatar &&
+          !i.meta.replyChoice &&
+          i.title === p.thread &&
+          (!i.meta.tapSequence || Number(i.meta.tapOrder) <= tapStep),
+      ),
       ...sent.flatMap((raw, index) => {
         try {
           const entry: unknown = JSON.parse(raw);
@@ -115,7 +125,16 @@ export function MymyKakao(p: SkinProps) {
               </button>
             </span>
           </header>
-          <div className="msgs kk" ref={scroll} onClick={() => { if (p.thread === "小屎狗" && tapStep < 7) setTapStep(tapStep + 1); }}>
+          <div
+            className="msgs kk"
+            ref={scroll}
+            onClick={() => {
+              if (p.thread === "小屎狗" && tapStep < 7) {
+                setTapStep(tapStep + 1);
+                if (tapStep === 6) p.onRead("bath-6");
+              }
+            }}
+          >
             {messages.map((m, i) => {
               const run = messageRun(messages, i);
               return (
@@ -154,8 +173,28 @@ export function MymyKakao(p: SkinProps) {
                 </div>
               );
             })}
-            {p.thread === "小屎狗" && tapStep >= 4 && <p style={{textAlign:"center",fontSize:11,color:"#626262"}}>{tapStep >= 7 ? "韩志薰已读" : "金道勋已读"}</p>}
-            {p.thread === "小屎狗" && tapStep < 7 && <p style={{textAlign:"center",fontSize:11,color:"#626262"}}>轻触聊天区域，继续对话</p>}
+
+            {p.thread === "小屎狗" && tapStep < 7 && (
+              <p
+                style={{ textAlign: "center", fontSize: 11, color: "#626262" }}
+              >
+                轻触聊天区域，继续对话
+              </p>
+            )}
+            {p.items
+              .filter((i) => i.title === p.thread && i.meta.replyChoice)
+              .map((i) => (
+                <button
+                  key={i.id}
+                  className="kkt-reply-choice"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    p.onRead(i.id);
+                  }}
+                >
+                  {i.body}
+                </button>
+              ))}
             {!messages.length && <Blank />}
           </div>
           <form
@@ -259,7 +298,15 @@ export function MymyKakao(p: SkinProps) {
             )}
           </div>
           <div className="kzkb">
-            {tab === "好友" && <div className="kzkr"><Avatar name={p.owner || "我"} src={p.items.find(i => i.outgoing && i.avatar)?.avatar} /><b>{p.owner}</b></div>}
+            {tab === "好友" && (
+              <div className="kzkr">
+                <Avatar
+                  name={p.owner || "我"}
+                  src={p.items.find((i) => i.outgoing && i.avatar)?.avatar}
+                />
+                <b>{p.owner}</b>
+              </div>
+            )}
             <div className="kzksec">
               {tab === "好友" ? "好友" : "全部聊天"} {list.length}
             </div>
@@ -273,9 +320,22 @@ export function MymyKakao(p: SkinProps) {
                     key={g.title}
                     onClick={() => p.onThread(g.title)}
                   >
-                    <Avatar name={last.sender || g.title} src={g.items.find(i => !i.outgoing)?.avatar || last.avatar} />
+                    <Avatar
+                      name={last.sender || g.title}
+                      src={
+                        g.items.find((i) => i.meta.groupAvatar === "true")
+                          ?.avatar ||
+                        g.items.find((i) => !i.outgoing)?.avatar ||
+                        last.avatar
+                      }
+                    />
                     <span className="kzkn">
-                      <b>{g.title}{g.items.some(i => i.meta.pinned === "true") ? " 📌" : ""}</b>
+                      <b>
+                        {g.title}
+                        {g.items.some((i) => i.meta.pinned === "true")
+                          ? " 📌"
+                          : ""}
+                      </b>
                       <small>{tab === "好友" ? last.sender : last.body}</small>
                     </span>
                     <span className="kzkmt">
