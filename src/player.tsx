@@ -39,7 +39,7 @@ function Player() {
           <div className="player-title">
             <h1>{work.title}</h1>
           </div>
-          {choice ? <Phone key={`${work.id}-${choice}`} work={work} /> : (
+          {choice ? <Phone key={`${work.id}-${choice}`} work={work} freshStart={choice === "new"} /> : (
             <div style={{maxWidth:400,margin:"32px auto",padding:28,borderRadius:22,background:"#fff",boxShadow:"0 12px 45px #00000018",textAlign:"center"}}>
               <h2 style={{marginBottom:12}}>欢迎来到这部手机</h2>
               <p style={{color:"#666",marginBottom:24}}>请选择游玩方式</p>
