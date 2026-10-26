@@ -474,6 +474,12 @@ function PhoneRuntime({
                   onBack={() => setApp("")}
                   onSettings={onSettings}
                   onUi={(key, value) => {
+                    if (key === "returnOct24Notes" && value === true) {
+                      const current = runtimeRef.current;
+                      update(dispatch(work, {...current, ui: {...current.ui, notes: {...current.ui?.notes, openOct24Detail: true}}}, "variable", "ui:notes:openOct24Detail"));
+                      setApp("notes");
+                      return;
+                    }
                     if (key === "openOct24Kakao" && value === true) {
                       const current = runtimeRef.current;
                       update(dispatch(work, {...current, ui: {...current.ui, kakao: {...current.ui?.kakao, oct24Start: true}}}, "variable", "ui:kakao:oct24Start"));
@@ -928,6 +934,13 @@ function AppContent({
   work: Work;
 }) {
   const [detail, setDetail] = useState<Item | null>(null);
+  useEffect(() => {
+    if (app.id === "notes" && state.ui?.notes?.openOct24Detail === true) {
+      const note = items.find(i => i.id === "bath-2026-10-24");
+      if (note) setDetail(note);
+    }
+  }, [app.id, state.ui?.notes?.openOct24Detail]);
+
   const [thread, setThread] = useState("");
   const [tab, setTab] = useState(app.tabs[0]);
   const [q, setQ] = useState("");
