@@ -3,7 +3,7 @@
   "id": "jihoon-secret-love",
   "title": "藏在手机里的喜欢",
   "description": "虚构同人互动故事：韩志薰与金道勋正在秘密热恋，队内成员尚不知情，只觉得两人关系好得有些奇怪。人物对话均为创作。",
-  "revision": 11,
+  "revision": 12,
   "phone": {
     "owner": "韩志薰",
     "date": "2026-10-25",
@@ -1130,7 +1130,8 @@
           "key": "oct24-rps-2",
           "value": ""
         }
-      ]
+      ],
+      "label": "10月24日猜拳：石头"
     },
     {
       "id": "oct24-rps-event-1",
@@ -1188,7 +1189,8 @@
           "key": "oct24-rps-2",
           "value": ""
         }
-      ]
+      ],
+      "label": "10月24日猜拳：剪刀"
     },
     {
       "id": "oct24-rps-event-2",
@@ -1246,7 +1248,8 @@
           "key": "oct24-rps-2",
           "value": ""
         }
-      ]
+      ],
+      "label": "10月24日猜拳：布"
     }
   ],
   "tests": [
