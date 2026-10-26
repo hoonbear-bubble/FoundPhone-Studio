@@ -74,6 +74,10 @@ export function MymyKakao(p: SkinProps) {
     "kktDeletedMessages",
     [],
   );
+  const [historyPrompt,setHistoryPrompt]=useState(false);
+  const [historyOpen,setHistoryOpen]=useState(false);
+  const [rpsChoice,setRpsChoice]=useState("");
+  const touchStart=useRef<number|null>(null);
   const [manage, setManage] = useState(false);
   const [confirmClear, setConfirmClear] = useState(false);
   const localMessages = useMemo(
@@ -124,7 +128,11 @@ export function MymyKakao(p: SkinProps) {
         Number(b.items.some((i) => i.meta.pinned === "true")) -
         Number(a.items.some((i) => i.meta.pinned === "true")),
     );
-  const messages = revealed.filter((i) => i.title === p.thread);
+  const messages = revealed.filter((i) => i.title === p.thread && !i.id.startsWith("oct24-"));
+  const oldMessages=p.items.filter(i=>i.id.startsWith("oct24-"));
+  const oldIntro=oldMessages.filter(i=>i.id.startsWith("oct24-intro-"));
+  const branch=rpsChoice==="布"?"win":rpsChoice==="剪刀"?"lose":"";
+  const oldBranch=oldMessages.filter(i=>branch && i.id.startsWith("oct24-"+branch+"-"));
   const isBath = p.items.some(
     (i) =>
       i.title === p.thread &&
@@ -159,6 +167,9 @@ export function MymyKakao(p: SkinProps) {
           <div
             className="msgs kk"
             ref={scroll}
+            onTouchStart={e=>{touchStart.current=e.touches[0]?.clientY??null;}}
+            onTouchEnd={e=>{const start=touchStart.current;touchStart.current=null;if(start!==null && (e.changedTouches[0]?.clientY??0)-start>65 && (scroll.current?.scrollTop??0)<45 && p.thread==="小屎狗💗" && !historyOpen)setHistoryPrompt(true);}}
+            onWheel={e=>{if(e.deltaY< -15 && (scroll.current?.scrollTop??0)<30 && p.thread==="小屎狗💗" && !historyOpen)setHistoryPrompt(true);}}
             onClick={() => {
               if (isBath && tapStep < 7 && !manage) {
                 setTapStep(tapStep + 1);
@@ -166,6 +177,7 @@ export function MymyKakao(p: SkinProps) {
               }
             }}
           >
+            {historyOpen && <section style={{padding:12,background:"#f6f4ef",borderRadius:12,marginBottom:12}}><p style={{textAlign:"center"}}>10月24日 · 20:25</p>{oldIntro.map(m=><p key={m.id} style={{textAlign:m.outgoing?"right":"left"}}>{m.sender}：{m.body}</p>)}<p>金道勋固定出石头，请选择：</p>{!rpsChoice && ["石头","剪刀","布"].map(c=><button key={c} className="kkt-reply-choice" onClick={e=>{e.stopPropagation();setRpsChoice(c);}}>{c}</button>)}{rpsChoice==="石头" && <><p>平局！</p><button className="kkt-reply-choice" onClick={e=>{e.stopPropagation();setRpsChoice("");}}>再来一次</button></>}{oldBranch.map(m=><p key={m.id} style={{textAlign:m.outgoing?"right":"left"}}>{m.sender}：{m.body}</p>)}<button className="kkt-reply-choice" onClick={e=>{e.stopPropagation();setHistoryOpen(false);}}>返回当天聊天</button></section>}
             {messages.map((m, i) => {
               const run = messageRun(messages, i);
               return (
@@ -231,7 +243,7 @@ export function MymyKakao(p: SkinProps) {
                 (i) =>
                   !deleted.includes(i.id) &&
                   i.title === p.thread &&
-                  i.meta.replyChoice,
+                  i.meta.replyChoice && !i.id.startsWith("oct24-"),
               )
               .map((i) => (
                 <button
