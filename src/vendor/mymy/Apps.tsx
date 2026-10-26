@@ -132,7 +132,6 @@ export function MymyKakao(p: SkinProps) {
         Number(a.items.some((i) => i.meta.pinned === "true")),
     );
   const messages = revealed.filter((i) => i.title === p.thread && !i.id.startsWith("oct24-"));
-  const oldMessages=p.items.filter(i=>i.id.startsWith("oct24-"));
   const oldIntro=[["韩志薰","今天我要先洗澡"],["金道勋","不行不行我们猜拳"],["韩志薰","啊猜拳每次都是哥赢"],["韩志薰","我不要"],["金道勋","三局两胜吧 哥让你一局"],["韩志薰","不要🙅就一次"],["金道勋","剪刀石头布"]].map(([sender,body],i)=>({id:"oct24-new-"+i,sender,body,outgoing:sender==="韩志薰"}));
   const branch=rpsChoice?rpsResult:"";
   const winReplies = [
