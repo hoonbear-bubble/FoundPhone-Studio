@@ -135,7 +135,27 @@ export function MymyKakao(p: SkinProps) {
   const oldMessages=p.items.filter(i=>i.id.startsWith("oct24-"));
   const oldIntro=[["韩志薰","今天我要先洗澡"],["金道勋","不行不行我们猜拳"],["韩志薰","啊猜拳每次都是哥赢"],["韩志薰","我不要"],["金道勋","三局两胜吧 哥让你一局"],["韩志薰","不要🙅就一次"],["金道勋","剪刀石头布"]].map(([sender,body],i)=>({id:"oct24-new-"+i,sender,body,outgoing:sender==="韩志薰"}));
   const branch=rpsChoice?rpsResult:"";
-  const oldBranch=oldMessages.filter(i=>branch && i.id.startsWith("oct24-"+branch+"-"));
+  const winReplies = [
+    ["金道勋","10分钟一定要洗好"],
+    ["金道勋","一定要在10分钟内"],
+    ["韩志薰","赢家才有话语权！"],
+    ["韩志薰","我要泡半个小时"],
+    ["韩志薰","哥好好等着吧！"],
+    ["金道勋","啊韩志薰！"],
+  ];
+  const loseReplies = [
+    ["金道勋","我又赢了✌️～"],
+    ["韩志薰","哥要快点 不要像上次一样煮身体"],
+    ["金道勋","我才没有煮身体！"],
+    ["韩志薰","白菜焯水"],
+    ["金道勋","什么？"],
+    ["韩志薰","我说哥洗澡像白菜焯水…"],
+    ["韩志薰","啊不要问了快点去洗吧 ！"],
+    ["金道勋","知道了知道了"],
+  ];
+  const oldBranch = (branch === "win" ? winReplies : loseReplies).map(([sender,body],i)=>({
+    id:"oct24-reply-"+i,sender,body,outgoing:sender==="韩志薰"
+  }));
   const isBath = p.items.some(
     (i) =>
       i.title === p.thread &&
@@ -175,7 +195,7 @@ export function MymyKakao(p: SkinProps) {
             onTouchEnd={e=>{const start=touchStart.current;touchStart.current=null;if(start!==null && (e.changedTouches[0]?.clientY??0)-start>65 && (scroll.current?.scrollTop??0)<45 && p.thread==="小屎狗💗" && !historyOpen)setHistoryPrompt(true);}}
             onWheel={e=>{if(e.deltaY< -15 && (scroll.current?.scrollTop??0)<30 && p.thread==="小屎狗💗" && !historyOpen)setHistoryPrompt(true);}}
             onClick={() => {
-              if (historyOpen && !historyEnd) { const max=rpsChoice?oldIntro.length+2+oldBranch.length:oldIntro.length; setHistoryStep(v=>Math.min(v+1,max)); if(rpsChoice && historyStep>=max-1)setHistoryEnd(true); return; }
+              if (historyOpen && !historyEnd) { if (!rpsChoice && historyStep >= oldIntro.length) return; const max=rpsChoice?oldIntro.length+2+oldBranch.length:oldIntro.length; setHistoryStep(v=>Math.min(v+1,max)); if(rpsChoice && historyStep>=max-1)setHistoryEnd(true); return; }
               if (isBath && tapStep < 7 && !manage) {
                 setTapStep(tapStep + 1);
                 if (tapStep === 6) p.onRead("bath-6");
