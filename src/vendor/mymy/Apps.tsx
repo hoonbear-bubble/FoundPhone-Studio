@@ -79,6 +79,7 @@ export function MymyKakao(p: SkinProps) {
   const [rpsChoice,setRpsChoice]=useState("");
   const [historyStep,setHistoryStep]=useState(0);
   const [historyEnd,setHistoryEnd]=useState(false);
+  const [rpsResult,setRpsResult]=useState<"win"|"lose">("lose");
   const touchStart=useRef<number|null>(null);
   const [manage, setManage] = useState(false);
   const [confirmClear, setConfirmClear] = useState(false);
@@ -132,8 +133,8 @@ export function MymyKakao(p: SkinProps) {
     );
   const messages = revealed.filter((i) => i.title === p.thread && !i.id.startsWith("oct24-"));
   const oldMessages=p.items.filter(i=>i.id.startsWith("oct24-"));
-  const oldIntro=oldMessages.filter(i=>i.id.startsWith("oct24-intro-"));
-  const branch=rpsChoice?"lose":"";
+  const oldIntro=[["韩志薰","今天我要先洗澡"],["金道勋","不行不行我们猜拳"],["韩志薰","啊猜拳每次都是哥赢"],["韩志薰","我不要"],["金道勋","三局两胜吧 哥让你一局"],["韩志薰","不要🙅就一次"],["金道勋","剪刀石头布"]].map(([sender,body],i)=>({id:"oct24-new-"+i,sender,body,outgoing:sender==="韩志薰"}));
+  const branch=rpsChoice?rpsResult:"";
   const oldBranch=oldMessages.filter(i=>branch && i.id.startsWith("oct24-"+branch+"-"));
   const isBath = p.items.some(
     (i) =>
@@ -174,7 +175,7 @@ export function MymyKakao(p: SkinProps) {
             onTouchEnd={e=>{const start=touchStart.current;touchStart.current=null;if(start!==null && (e.changedTouches[0]?.clientY??0)-start>65 && (scroll.current?.scrollTop??0)<45 && p.thread==="小屎狗💗" && !historyOpen)setHistoryPrompt(true);}}
             onWheel={e=>{if(e.deltaY< -15 && (scroll.current?.scrollTop??0)<30 && p.thread==="小屎狗💗" && !historyOpen)setHistoryPrompt(true);}}
             onClick={() => {
-              if (historyOpen && !historyEnd) { const max=rpsChoice?2+oldBranch.length:2; setHistoryStep(v=>Math.min(v+1,max)); if(rpsChoice && historyStep>=max-1)setHistoryEnd(true); return; }
+              if (historyOpen && !historyEnd) { const max=rpsChoice?oldIntro.length+2+oldBranch.length:oldIntro.length; setHistoryStep(v=>Math.min(v+1,max)); if(rpsChoice && historyStep>=max-1)setHistoryEnd(true); return; }
               if (isBath && tapStep < 7 && !manage) {
                 setTapStep(tapStep + 1);
                 if (tapStep === 6) p.onRead("bath-6");
@@ -182,8 +183,15 @@ export function MymyKakao(p: SkinProps) {
             }}
           >
             {historyPrompt && <div role="dialog" aria-label="访问上一天聊天记录" style={{padding:20,background:"white",borderRadius:16,textAlign:"center",boxShadow:"0 4px 20px #0003"}}><strong>是否访问上一天聊天记录？</strong><p>10月24日</p><button className="kkt-reply-choice" onClick={e=>{e.stopPropagation();setHistoryPrompt(false);setHistoryOpen(true);}}>是</button><button className="kkt-reply-choice" onClick={e=>{e.stopPropagation();setHistoryPrompt(false);}}>否</button></div>}
-            {historyOpen && <section style={{padding:12,background:"#f6f4ef",borderRadius:12,marginBottom:12}}><p style={{textAlign:"center"}}>10月24日 · 20:25</p>{oldIntro.slice(0,historyStep).map(m=><p key={m.id} style={{textAlign:m.outgoing?"right":"left"}}>{m.sender}：{m.body}</p>)}{historyStep>=2 && !rpsChoice && <><p>请选择：石头、剪刀或布</p>{["石头","剪刀","布"].map(c=><button key={c} className="kkt-reply-choice" onClick={e=>{e.stopPropagation();setRpsChoice(c);setHistoryStep(2);}}>{c}</button>)}</>}{rpsChoice && <><p style={{textAlign:"right"}}>韩志薰：{rpsChoice}</p><p>金道勋：{rpsChoice==="石头"?"布":rpsChoice==="剪刀"?"石头":"剪刀"}！</p>{oldBranch.slice(0,Math.max(0,historyStep-2)).map(m=><p key={m.id} style={{textAlign:m.outgoing?"right":"left"}}>{m.sender}：{m.body}</p>)}</>}{historyEnd && <div><p>当日剧情已结束，是否返回现在？</p><button className="kkt-reply-choice" onClick={e=>{e.stopPropagation();setHistoryOpen(false);setHistoryEnd(false);}}>是 · 返回现在</button><button className="kkt-reply-choice" onClick={e=>{e.stopPropagation();setHistoryOpen(false);setHistoryEnd(false);}}>否 · 自由探索手机</button></div>}{!historyEnd && <p style={{textAlign:"center",fontSize:12,color:"#777"}}>点击聊天空白处显示下一条消息</p>}</section>}
-            {messages.map((m, i) => {
+            {historyOpen && <section style={{padding:12,background:"#b2c7d9",minHeight:"100%"}}>
+              <p style={{textAlign:"center",fontSize:12}}>10月24日 · 20:25</p>
+              {oldIntro.slice(0,historyStep).map(m=><p key={m.id} style={{textAlign:m.outgoing?"right":"left",margin:"14px 0"}}><span style={{background:m.outgoing?"#fee500":"white",borderRadius:12,padding:10,display:"inline-block"}}>{m.body}</span></p>)}
+              {historyStep>=oldIntro.length && !rpsChoice && <div style={{padding:16,background:"white",borderRadius:14,textAlign:"center"}}><strong>选择出拳</strong><div style={{display:"flex",gap:14,justifyContent:"space-between",marginTop:16}}>{["剪刀","石头","布"].map((c,i)=><button key={c} className="kkt-reply-choice" style={{flex:1,minWidth:0,padding:"12px 2px"}} onClick={e=>{e.stopPropagation();setRpsChoice(c);setRpsResult(Math.random()<0.5?"win":"lose");}}>{["A","B","C"][i]} · {c}</button>)}</div></div>}
+              {rpsChoice && <>{[{body:rpsChoice,outgoing:true},{body:rpsResult==="win"?(rpsChoice==="剪刀"?"布":rpsChoice==="石头"?"剪刀":"石头"):(rpsChoice==="剪刀"?"石头":rpsChoice==="石头"?"布":"剪刀"),outgoing:false},...oldBranch].slice(0,Math.max(0,historyStep-oldIntro.length)).map((m,i)=><p key={i} style={{textAlign:m.outgoing?"right":"left",margin:"14px 0"}}><span style={{background:m.outgoing?"#fee500":"white",borderRadius:12,padding:10,display:"inline-block"}}>{m.body}</span></p>)}</>}
+              {historyEnd && <div style={{padding:16,background:"white",borderRadius:14,textAlign:"center"}}><strong>剧情结束，接下来想去哪里？</strong><div style={{display:"flex",flexDirection:"column",gap:14,marginTop:14}}><button className="kkt-reply-choice" onClick={e=>{e.stopPropagation();setHistoryOpen(false);p.onUi?.("returnOct24Notes",true);}}>返回备忘录</button><button className="kkt-reply-choice" onClick={e=>{e.stopPropagation();setHistoryOpen(false);p.onThread("");}}>自由探索手机</button></div></div>}
+              {!historyEnd && <p style={{textAlign:"center",fontSize:12,marginTop:20}}>轻点空白处显示下一条消息</p>}
+            </section>}
+            {!historyOpen && messages.map((m, i) => {
               const run = messageRun(messages, i);
               return (
                 <div
@@ -236,14 +244,14 @@ export function MymyKakao(p: SkinProps) {
               );
             })}
 
-            {isBath && tapStep < 7 && !manage && (
+            {!historyOpen && isBath && tapStep < 7 && !manage && (
               <p
                 style={{ textAlign: "center", fontSize: 11, color: "#626262" }}
               >
                 轻触聊天区域，继续对话
               </p>
             )}
-            {p.items
+            {!historyOpen && p.items
               .filter(
                 (i) =>
                   !deleted.includes(i.id) &&
@@ -262,7 +270,7 @@ export function MymyKakao(p: SkinProps) {
                   {i.body}
                 </button>
               ))}
-            {!messages.length && !isBath && (
+            {!historyOpen && !messages.length && !isBath && (
               <p className="mymy-empty">暂无聊天记录</p>
             )}
           </div>
