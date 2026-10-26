@@ -204,12 +204,10 @@ function PhoneRuntime({
       .get(work.id)
       .then((saved) => {
         if (!active) return;
-        if (saved && saved.state.revision === work.updatedAt)
-          setOwn(saved.state);
-        else {
-          setOwn(dispatch(work, initialRuntime(work), "start"));
-          if (saved) setLoadError("作品已更新，已开始新的进度。");
-        }
+        // Public story previews always start from the beginning. Do not
+        // restore previous notifications, revealed messages, or story choices.
+        setOwn(dispatch(work, initialRuntime(work), "start"));
+        if (saved) setLoadError("");
         setReady(true);
       })
       .catch(() => {
