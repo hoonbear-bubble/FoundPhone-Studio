@@ -80,7 +80,7 @@ export function MymyKakao(p: SkinProps) {
   const [historyStep,setHistoryStep]=useState(0);
   const [historyEnd,setHistoryEnd]=useState(false);
   const [rpsResult,setRpsResult]=useState<"win"|"lose">("lose");
-  const [savedOct24,setSavedOct24]=useSkinState<{choice:string;result:"win"|"lose"}|null>(p,"completedOct24KakaoV1",null);
+  const [savedOct24,setSavedOct24]=useSkinState<{choice:string;result:"win"|"lose"}|false>(p,"completedOct24KakaoV1",false);
   const touchStart=useRef<number|null>(null);
   const [manage, setManage] = useState(false);
   const [confirmClear, setConfirmClear] = useState(false);
