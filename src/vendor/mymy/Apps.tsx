@@ -276,6 +276,7 @@ export function MymyKakao(p: SkinProps) {
           </div>
           <form
             className="kzinp"
+            style={{display:historyOpen?"none":undefined}}
             onSubmit={(e) => {
               e.preventDefault();
               if (draft.trim()) {
