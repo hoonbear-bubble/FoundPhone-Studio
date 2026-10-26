@@ -123,6 +123,7 @@ function PhoneRuntime({
   onOpen,
   runtime: external,
   onRuntime,
+  freshStart = false,
 }: {
   deviceLayout: ReturnType<typeof useDeviceLayout>;
   work: Work;
@@ -133,9 +134,10 @@ function PhoneRuntime({
   onOpen?: (app: string) => void;
   runtime?: Runtime;
   onRuntime?: (s: Runtime) => void;
+  freshStart?: boolean;
 }) {
   const [app, setApp] = useState(() => {
-    if (creator || external) return "";
+    if (creator || external || freshStart) return "";
     try { return localStorage.getItem(`foundphone-last-app-${work.id}`) || ""; } catch { return ""; }
   });
   const [homeRequest, setHomeRequest] = useState(0);
@@ -204,6 +206,11 @@ function PhoneRuntime({
   useEffect(() => {
     let active = true;
     if (creator || external) return;
+    if (freshStart) {
+      setOwn(initialRuntime(work));
+      setReady(true);
+      return;
+    }
     void db.saves
       .get(work.id)
       .then((saved) => {
@@ -220,7 +227,7 @@ function PhoneRuntime({
     return () => {
       active = false;
     };
-  }, [work.id, work.updatedAt, creator, external]);
+  }, [work.id, work.updatedAt, creator, external, freshStart]);
   useEffect(() => {
     if (!creator && !external && ready)
       void db.saves
