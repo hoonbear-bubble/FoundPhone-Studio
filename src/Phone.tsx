@@ -134,7 +134,10 @@ function PhoneRuntime({
   runtime?: Runtime;
   onRuntime?: (s: Runtime) => void;
 }) {
-  const [app, setApp] = useState("");
+  const [app, setApp] = useState(() => {
+    if (creator || external) return "";
+    try { return localStorage.getItem(`foundphone-last-app-${work.id}`) || ""; } catch { return ""; }
+  });
   const [homeRequest, setHomeRequest] = useState(0);
   const [locked, setLocked] = useState(!creator);
   const [pinOpen, setPinOpen] = useState(false);
@@ -205,9 +208,7 @@ function PhoneRuntime({
       .get(work.id)
       .then((saved) => {
         if (!active) return;
-        // Public story previews always start from the beginning. Do not
-        // restore previous notifications, revealed messages, or story choices.
-        setOwn(dispatch(work, initialRuntime(work), "start"));
+        setOwn(saved?.state ?? dispatch(work, initialRuntime(work), "start"));
         if (saved) setLoadError("");
         setReady(true);
       })
@@ -243,6 +244,10 @@ function PhoneRuntime({
     }, 1000);
     return () => clearInterval(interval);
   }, [creator, ready, work.id, work.updatedAt]);
+  useEffect(() => {
+    if (creator || external || !ready) return;
+    try { localStorage.setItem(`foundphone-last-app-${work.id}`, app); } catch { /* Storage unavailable. */ }
+  }, [app, creator, external, ready, work.id]);
   const event = (event: string, target: string) => {
     if (!creator) update(dispatch(work, runtimeRef.current, event, target));
   };
