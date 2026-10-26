@@ -3,7 +3,7 @@
   "id": "jihoon-secret-love",
   "title": "藏在手机里的喜欢",
   "description": "虚构同人互动故事：韩志薰与金道勋正在秘密热恋，队内成员尚不知情，只觉得两人关系好得有些奇怪。人物对话均为创作。",
-  "revision": 10,
+  "revision": 11,
   "phone": {
     "owner": "韩志薰",
     "date": "2026-10-25",
@@ -110,6 +110,149 @@
         "dohun"
       ],
       "messages": [
+        {
+          "id": "oct24-intro-0",
+          "senderId": "owner",
+          "body": "我先洗澡",
+          "time": "20:25"
+        },
+        {
+          "id": "oct24-intro-1",
+          "senderId": "dohun",
+          "body": "猜拳",
+          "time": "20:25"
+        },
+        {
+          "id": "oct24-rps-0",
+          "senderId": "owner",
+          "body": "石头",
+          "time": "20:25",
+          "hidden": true,
+          "meta": {
+            "replyChoice": "true",
+            "historyDate": "2026-10-24"
+          }
+        },
+        {
+          "id": "oct24-rps-1",
+          "senderId": "owner",
+          "body": "剪刀",
+          "time": "20:25",
+          "hidden": true,
+          "meta": {
+            "replyChoice": "true",
+            "historyDate": "2026-10-24"
+          }
+        },
+        {
+          "id": "oct24-rps-2",
+          "senderId": "owner",
+          "body": "布",
+          "time": "20:25",
+          "hidden": true,
+          "meta": {
+            "replyChoice": "true",
+            "historyDate": "2026-10-24"
+          }
+        },
+        {
+          "id": "oct24-win-0",
+          "senderId": "dohun",
+          "body": "10分钟一定要洗好",
+          "time": "20:25",
+          "hidden": true
+        },
+        {
+          "id": "oct24-win-1",
+          "senderId": "dohun",
+          "body": "一定要在10分钟内",
+          "time": "20:25",
+          "hidden": true
+        },
+        {
+          "id": "oct24-win-2",
+          "senderId": "owner",
+          "body": "赢家才有话语权！",
+          "time": "20:25",
+          "hidden": true
+        },
+        {
+          "id": "oct24-win-3",
+          "senderId": "owner",
+          "body": "我要泡半个小时",
+          "time": "20:25",
+          "hidden": true
+        },
+        {
+          "id": "oct24-win-4",
+          "senderId": "owner",
+          "body": "哥好好等着吧！",
+          "time": "20:25",
+          "hidden": true
+        },
+        {
+          "id": "oct24-win-5",
+          "senderId": "dohun",
+          "body": "啊韩志薰！",
+          "time": "20:25",
+          "hidden": true
+        },
+        {
+          "id": "oct24-lose-0",
+          "senderId": "dohun",
+          "body": "我又赢了✌️～",
+          "time": "20:25",
+          "hidden": true
+        },
+        {
+          "id": "oct24-lose-1",
+          "senderId": "owner",
+          "body": "哥要快点 不要像上次一样煮身体",
+          "time": "20:25",
+          "hidden": true
+        },
+        {
+          "id": "oct24-lose-2",
+          "senderId": "dohun",
+          "body": "我才没有煮身体！",
+          "time": "20:25",
+          "hidden": true
+        },
+        {
+          "id": "oct24-lose-3",
+          "senderId": "owner",
+          "body": "白菜焯水",
+          "time": "20:25",
+          "hidden": true
+        },
+        {
+          "id": "oct24-lose-4",
+          "senderId": "dohun",
+          "body": "什么？",
+          "time": "20:25",
+          "hidden": true
+        },
+        {
+          "id": "oct24-lose-5",
+          "senderId": "owner",
+          "body": "我说哥洗澡像白菜焯水…",
+          "time": "20:25",
+          "hidden": true
+        },
+        {
+          "id": "oct24-lose-6",
+          "senderId": "owner",
+          "body": "啊不要问了快点去洗吧 ！",
+          "time": "20:25",
+          "hidden": true
+        },
+        {
+          "id": "oct24-lose-7",
+          "senderId": "dohun",
+          "body": "知道了知道了",
+          "time": "20:25",
+          "hidden": true
+        },
         {
           "id": "bath-0",
           "senderId": "owner",
@@ -917,6 +1060,190 @@
         {
           "type": "hide",
           "key": "bath-choice-2",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "id": "oct24-rps-event-0",
+      "type": "event",
+      "event": "read",
+      "target": "oct24-rps-0",
+      "actions": [
+        {
+          "type": "variable",
+          "key": "oct24Rps",
+          "value": "lose"
+        },
+        {
+          "type": "unlock",
+          "key": "oct24-lose-0",
+          "value": ""
+        },
+        {
+          "type": "unlock",
+          "key": "oct24-lose-1",
+          "value": ""
+        },
+        {
+          "type": "unlock",
+          "key": "oct24-lose-2",
+          "value": ""
+        },
+        {
+          "type": "unlock",
+          "key": "oct24-lose-3",
+          "value": ""
+        },
+        {
+          "type": "unlock",
+          "key": "oct24-lose-4",
+          "value": ""
+        },
+        {
+          "type": "unlock",
+          "key": "oct24-lose-5",
+          "value": ""
+        },
+        {
+          "type": "unlock",
+          "key": "oct24-lose-6",
+          "value": ""
+        },
+        {
+          "type": "unlock",
+          "key": "oct24-lose-7",
+          "value": ""
+        },
+        {
+          "type": "hide",
+          "key": "oct24-rps-0",
+          "value": ""
+        },
+        {
+          "type": "hide",
+          "key": "oct24-rps-1",
+          "value": ""
+        },
+        {
+          "type": "hide",
+          "key": "oct24-rps-2",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "id": "oct24-rps-event-1",
+      "type": "event",
+      "event": "read",
+      "target": "oct24-rps-1",
+      "actions": [
+        {
+          "type": "variable",
+          "key": "oct24Rps",
+          "value": "win"
+        },
+        {
+          "type": "unlock",
+          "key": "oct24-win-0",
+          "value": ""
+        },
+        {
+          "type": "unlock",
+          "key": "oct24-win-1",
+          "value": ""
+        },
+        {
+          "type": "unlock",
+          "key": "oct24-win-2",
+          "value": ""
+        },
+        {
+          "type": "unlock",
+          "key": "oct24-win-3",
+          "value": ""
+        },
+        {
+          "type": "unlock",
+          "key": "oct24-win-4",
+          "value": ""
+        },
+        {
+          "type": "unlock",
+          "key": "oct24-win-5",
+          "value": ""
+        },
+        {
+          "type": "hide",
+          "key": "oct24-rps-0",
+          "value": ""
+        },
+        {
+          "type": "hide",
+          "key": "oct24-rps-1",
+          "value": ""
+        },
+        {
+          "type": "hide",
+          "key": "oct24-rps-2",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "id": "oct24-rps-event-2",
+      "type": "event",
+      "event": "read",
+      "target": "oct24-rps-2",
+      "actions": [
+        {
+          "type": "variable",
+          "key": "oct24Rps",
+          "value": "win"
+        },
+        {
+          "type": "unlock",
+          "key": "oct24-win-0",
+          "value": ""
+        },
+        {
+          "type": "unlock",
+          "key": "oct24-win-1",
+          "value": ""
+        },
+        {
+          "type": "unlock",
+          "key": "oct24-win-2",
+          "value": ""
+        },
+        {
+          "type": "unlock",
+          "key": "oct24-win-3",
+          "value": ""
+        },
+        {
+          "type": "unlock",
+          "key": "oct24-win-4",
+          "value": ""
+        },
+        {
+          "type": "unlock",
+          "key": "oct24-win-5",
+          "value": ""
+        },
+        {
+          "type": "hide",
+          "key": "oct24-rps-0",
+          "value": ""
+        },
+        {
+          "type": "hide",
+          "key": "oct24-rps-1",
+          "value": ""
+        },
+        {
+          "type": "hide",
+          "key": "oct24-rps-2",
           "value": ""
         }
       ]
