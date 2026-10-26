@@ -1,3 +1,4 @@
+import addedAlbum from "./data/album-added-20261026.json";
 import { WeverseCommentNotice } from "./WeverseCommentNotice";
 import { StatusGlyph } from "./ios/StatusGlyph";
 import { SocialDetail, socialDetailApps } from "./skins/SocialDetails";
@@ -970,7 +971,7 @@ function AppContent({
   const [unlocks, setUnlocks] = useState<string[]>([]);
   const [pwError, setPwError] = useState("");
   const [likes, setLikes] = useState<string[]>([]);
-  const shown = (app.id === "photos" ? [...importedPhotos, ...items] : items)
+  const shown = (app.id === "photos" ? [...importedPhotos, ...(addedAlbum.photos as Item[]), ...items] : items)
     .filter((i) => creator || visible(i, state))
     .filter((i) =>
       (i.title + i.body + i.sender).toLowerCase().includes(q.toLowerCase()),
