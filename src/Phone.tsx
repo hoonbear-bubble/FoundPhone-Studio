@@ -1062,7 +1062,7 @@ function AppContent({
             />
           ) : nativeDetailApps.has(app.id) &&
             (!detail.password || unlocks.includes(detail.id)) ? (
-            <NativeDetail app={app.id} item={detail} back={back} />
+            <NativeDetail app={app.id} item={detail} back={back} onEnterStory={app.id === "notes" && detail.id === "bath-2026-10-24" ? () => onUi?.("openOct24Kakao", true) : undefined} />
           ) : (
             <>
               <div className="app-nav">
