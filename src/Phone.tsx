@@ -474,6 +474,12 @@ function PhoneRuntime({
                   onBack={() => setApp("")}
                   onSettings={onSettings}
                   onUi={(key, value) => {
+                    if (key === "openOct24Kakao" && value === true) {
+                      const current = runtimeRef.current;
+                      update(dispatch(work, {...current, ui: {...current.ui, kakao: {...current.ui?.kakao, oct24Start: true}}}, "variable", "ui:kakao:oct24Start"));
+                      setApp("kakao");
+                      return;
+                    }
                     const current = runtimeRef.current;
                     update(
                       dispatch(
