@@ -80,7 +80,8 @@ export function MymyKakao(p: SkinProps) {
   const [historyStep,setHistoryStep]=useState(0);
   const [historyEnd,setHistoryEnd]=useState(false);
   const [rpsResult,setRpsResult]=useState<"win"|"lose">("lose");
-  const [savedOct24,setSavedOct24]=useSkinState<{choice:string;result:"win"|"lose"}|false>(p,"completedOct24KakaoV1",false);
+  const [savedOct24Json,setSavedOct24Json]=useSkinState<string>(p,"completedOct24KakaoV1","");
+  const savedOct24 = useMemo(() => { try { const value = JSON.parse(savedOct24Json) as {choice:string;result:"win"|"lose"}; return value?.choice && (value.result==="win" || value.result==="lose") ? value : null; } catch { return null; } }, [savedOct24Json]);
   const touchStart=useRef<number|null>(null);
   const [manage, setManage] = useState(false);
   const [confirmClear, setConfirmClear] = useState(false);
@@ -164,7 +165,7 @@ export function MymyKakao(p: SkinProps) {
   );
   const scroll = useRef<HTMLDivElement>(null);
   useEffect(()=>{if(p.ui?.oct24Start===true){p.onThread("小屎狗💗");setHistoryOpen(true);setHistoryPrompt(false);setHistoryStep(0);setRpsChoice("");setHistoryEnd(false);p.onUi?.("oct24Start",false);}},[p.ui?.oct24Start]);
-  useEffect(()=>{if(historyEnd && rpsChoice)setSavedOct24({choice:rpsChoice,result:rpsResult});},[historyEnd,rpsChoice,rpsResult,setSavedOct24]);
+  useEffect(()=>{if(historyEnd && rpsChoice)setSavedOct24Json(JSON.stringify({choice:rpsChoice,result:rpsResult}));},[historyEnd,rpsChoice,rpsResult,setSavedOct24Json]);
   useEffect(() => {
     const node = scroll.current;
     if (node) node.scrollTop = node.scrollHeight;
