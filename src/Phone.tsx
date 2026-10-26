@@ -208,12 +208,12 @@ function PhoneRuntime({
       .get(work.id)
       .then((saved) => {
         if (!active) return;
-        setOwn(saved?.state ?? dispatch(work, initialRuntime(work), "start"));
+        setOwn(saved?.state ?? initialRuntime(work));
         if (saved) setLoadError("");
         setReady(true);
       })
       .catch(() => {
-        setOwn(dispatch(work, initialRuntime(work), "start"));
+        setOwn(initialRuntime(work));
         setLoadError("无法读取本地存档。本次仍可游玩。");
         setReady(true);
       });
