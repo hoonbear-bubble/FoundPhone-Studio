@@ -80,6 +80,7 @@ export function MymyKakao(p: SkinProps) {
   const [historyStep,setHistoryStep]=useState(0);
   const [historyEnd,setHistoryEnd]=useState(false);
   const [rpsResult,setRpsResult]=useState<"win"|"lose">("lose");
+  const [savedOct24,setSavedOct24]=useSkinState<{choice:string;result:"win"|"lose"}|null>(p,"completedOct24KakaoV1",null);
   const touchStart=useRef<number|null>(null);
   const [manage, setManage] = useState(false);
   const [confirmClear, setConfirmClear] = useState(false);
@@ -163,6 +164,7 @@ export function MymyKakao(p: SkinProps) {
   );
   const scroll = useRef<HTMLDivElement>(null);
   useEffect(()=>{if(p.ui?.oct24Start===true){p.onThread("小屎狗💗");setHistoryOpen(true);setHistoryPrompt(false);setHistoryStep(0);setRpsChoice("");setHistoryEnd(false);p.onUi?.("oct24Start",false);}},[p.ui?.oct24Start]);
+  useEffect(()=>{if(historyEnd && rpsChoice)setSavedOct24({choice:rpsChoice,result:rpsResult});},[historyEnd,rpsChoice,rpsResult,setSavedOct24]);
   useEffect(() => {
     const node = scroll.current;
     if (node) node.scrollTop = node.scrollHeight;
@@ -209,6 +211,16 @@ export function MymyKakao(p: SkinProps) {
               {rpsChoice && <>{[{body:rpsChoice,outgoing:true},{body:rpsResult==="win"?(rpsChoice==="剪刀"?"布":rpsChoice==="石头"?"剪刀":"石头"):(rpsChoice==="剪刀"?"石头":rpsChoice==="石头"?"布":"剪刀"),outgoing:false},...oldBranch].slice(0,Math.max(0,historyStep-oldIntro.length)).map((m,i)=><p key={i} style={{textAlign:m.outgoing?"right":"left",margin:"14px 0"}}><span style={{background:m.outgoing?"#fee500":"white",borderRadius:12,padding:10,display:"inline-block"}}>{m.body}</span></p>)}</>}
               {historyEnd && <div style={{padding:16,background:"white",borderRadius:14,textAlign:"center"}}><strong>剧情结束，接下来想去哪里？</strong><div style={{display:"flex",flexDirection:"column",gap:14,marginTop:14}}><button className="kkt-reply-choice" onClick={e=>{e.stopPropagation();setHistoryOpen(false);p.onUi?.("returnOct24Notes",true);}}>返回备忘录</button><button className="kkt-reply-choice" onClick={e=>{e.stopPropagation();setHistoryOpen(false);p.onThread("");}}>自由探索手机</button></div></div>}
               {!historyEnd && <p style={{textAlign:"center",fontSize:12,marginTop:20}}>轻点空白处显示下一条消息</p>}
+            </section>}
+            {!historyOpen && p.thread==="小屎狗💗" && savedOct24 && <section aria-label="10月24日已完成聊天记录" style={{padding:"8px 12px 16px",background:"#b2c7d9"}}>
+              <p style={{textAlign:"center",fontSize:12,margin:"8px 0 16px"}}>10月24日 · 20:25</p>
+              {[
+                ...oldIntro,
+                {body:savedOct24.choice,outgoing:true},
+                {body:savedOct24.result==="win"?(savedOct24.choice==="剪刀"?"布":savedOct24.choice==="石头"?"剪刀":"石头"):(savedOct24.choice==="剪刀"?"石头":savedOct24.choice==="石头"?"布":"剪刀"),outgoing:false},
+                ...(savedOct24.result==="win"?winReplies:loseReplies).map(([sender,body])=>({body,outgoing:sender==="韩志薰"}))
+              ].map((m,i)=><p key={"saved-oct24-"+i} style={{textAlign:m.outgoing?"right":"left",margin:"14px 0"}}><span style={{background:m.outgoing?"#fee500":"white",borderRadius:12,padding:10,display:"inline-block"}}>{m.body}</span></p>)}
+              <p style={{textAlign:"center",fontSize:12,marginTop:18}}>10月25日</p>
             </section>}
             {!historyOpen && messages.map((m, i) => {
               const run = messageRun(messages, i);
