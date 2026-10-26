@@ -931,6 +931,30 @@ function AppContent({
   onUi?: (key: string, value: UiValue) => void;
   work: Work;
 }) {
+  const [importedPhotos, setImportedPhotos] = useState<Item[]>(() => {
+    try {
+      const saved = localStorage.getItem("foundphone-imported-photos");
+      const data: unknown = saved ? JSON.parse(saved) : [];
+      return Array.isArray(data) ? data.filter((x): x is Item => !!x && typeof x === "object" && typeof x.id === "string" && typeof x.media === "string" && x.media.startsWith("data:image/")) : [];
+    } catch { return []; }
+  });
+  const [photoImportError, setPhotoImportError] = useState("");
+  const importPhotoFile = async (file?: File) => {
+    if (!file) return;
+    try {
+      const data: unknown = JSON.parse(await file.text());
+      const entries = (data as { photos?: unknown })?.photos;
+      if (!Array.isArray(entries) || entries.length === 0 || !entries.every(x => x && typeof x === "object" && typeof x.id === "string" && typeof x.media === "string" && x.media.startsWith("data:image/"))) {
+        throw new Error("请选择相册照片 JSON 文件");
+      }
+      const merged = [...importedPhotos.filter(x => !entries.some((e: Item) => e.id === x.id)), ...entries] as Item[];
+      localStorage.setItem("foundphone-imported-photos", JSON.stringify(merged));
+      setImportedPhotos(merged);
+      setPhotoImportError("");
+    } catch (error) {
+      setPhotoImportError(error instanceof Error ? error.message : "导入失败");
+    }
+  };
   const [detail, setDetail] = useState<Item | null>(null);
   useEffect(() => {
     if (app.id === "notes" && state.ui?.notes?.openOct24Detail === true) {
@@ -946,7 +970,7 @@ function AppContent({
   const [unlocks, setUnlocks] = useState<string[]>([]);
   const [pwError, setPwError] = useState("");
   const [likes, setLikes] = useState<string[]>([]);
-  const shown = items
+  const shown = (app.id === "photos" ? [...importedPhotos, ...items] : items)
     .filter((i) => creator || visible(i, state))
     .filter((i) =>
       (i.title + i.body + i.sender).toLowerCase().includes(q.toLowerCase()),
@@ -1040,6 +1064,15 @@ function AppContent({
   if (Skin)
     return (
       <>
+        {app.id === "photos" && !creator && !detail && (
+          <div style={{padding:"8px 16px", background:"#fff", color:"#222", fontSize:12}}>
+            <label style={{cursor:"pointer",display:"inline-block",padding:"7px 12px",borderRadius:8,background:"#eee"}}>
+              ＋ 导入相册照片
+              <input type="file" accept=".json,application/json" style={{display:"none"}} onChange={e => { void importPhotoFile(e.target.files?.[0]); e.target.value = ""; }} />
+            </label>
+            {photoImportError && <span style={{color:"#b33",marginLeft:8}}>{photoImportError}</span>}
+          </div>
+        )}
         <div className="catalog-slot" hidden={!!detail}>
           <Suspense fallback={<div className="catalog-loading">正在打开…</div>}>
             <Skin
