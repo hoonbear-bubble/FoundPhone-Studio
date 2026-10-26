@@ -177,6 +177,7 @@ export function MymyKakao(p: SkinProps) {
               }
             }}
           >
+            {historyPrompt && <div role="dialog" aria-label="访问上一天聊天记录" style={{padding:20,background:"white",borderRadius:16,textAlign:"center",boxShadow:"0 4px 20px #0003"}}><strong>是否访问上一天聊天记录？</strong><p>10月24日</p><button className="kkt-reply-choice" onClick={e=>{e.stopPropagation();setHistoryPrompt(false);setHistoryOpen(true);}}>是</button><button className="kkt-reply-choice" onClick={e=>{e.stopPropagation();setHistoryPrompt(false);}}>否</button></div>}
             {historyOpen && <section style={{padding:12,background:"#f6f4ef",borderRadius:12,marginBottom:12}}><p style={{textAlign:"center"}}>10月24日 · 20:25</p>{oldIntro.map(m=><p key={m.id} style={{textAlign:m.outgoing?"right":"left"}}>{m.sender}：{m.body}</p>)}<p>金道勋固定出石头，请选择：</p>{!rpsChoice && ["石头","剪刀","布"].map(c=><button key={c} className="kkt-reply-choice" onClick={e=>{e.stopPropagation();setRpsChoice(c);}}>{c}</button>)}{rpsChoice==="石头" && <><p>平局！</p><button className="kkt-reply-choice" onClick={e=>{e.stopPropagation();setRpsChoice("");}}>再来一次</button></>}{oldBranch.map(m=><p key={m.id} style={{textAlign:m.outgoing?"right":"left"}}>{m.sender}：{m.body}</p>)}<button className="kkt-reply-choice" onClick={e=>{e.stopPropagation();setHistoryOpen(false);}}>返回当天聊天</button></section>}
             {messages.map((m, i) => {
               const run = messageRun(messages, i);
