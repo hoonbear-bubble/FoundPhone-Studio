@@ -27,10 +27,12 @@ export function NativeDetail({
   app,
   item,
   back,
+  onEnterStory,
 }: {
   app: string;
   item: Item;
   back: () => void;
+  onEnterStory?: () => void;
 }) {
   const [favorite, setFavorite] = useState(item.favorite),
     [copied, setCopied] = useState(false),
@@ -146,6 +148,7 @@ export function NativeDetail({
             <time>{item.time}</time>
             <h1>{item.title}</h1>
             <RichText value={item.richText} fallback={item.body} />
+            {item.id === "bath-2026-10-24" && onEnterStory && <div style={{marginTop:26,padding:16,background:"#fff1cc",borderRadius:14}}><strong>是否进入当日剧情？</strong><p style={{fontSize:13,margin:"10px 0"}}>10月24日 · KakaoTalk 猜拳</p><div style={{display:"flex",gap:12}}><button onClick={onEnterStory} style={{background:"#f5c447",borderRadius:10,padding:"9px 18px"}}>是 · 进入剧情</button><button onClick={back} style={{background:"#eee",borderRadius:10,padding:"9px 18px"}}>否</button></div></div>}
           </div>
           <footer className="native-detail-toolbar">
             <button aria-label="返回文件夹" onClick={back}>
